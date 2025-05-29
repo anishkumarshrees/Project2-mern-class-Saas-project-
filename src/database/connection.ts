@@ -1,0 +1,19 @@
+import { error } from "console"
+import { Sequelize } from "sequelize"
+
+const sequelize = new Sequelize({
+    database : process.env.DB_NAME, //database ko name
+    username : process.env.DB_USERNAME, // databasw ko username, by default root hunxa
+    password : process.env.DB_PASSWORD, // database ko pw, by default khali hunxa
+    host : process.env.DB_LOCALHOST, // database ko location
+    dialect : "mysql", // kun database use garna aateko vanne kura
+    port: Number(process.env.DB_PORT) //default port number 3306 hunxa
+})
+
+sequelize.authenticate()
+.then(()=>{
+    console.log("connected")
+})
+.catch(()=>{
+    console.log("error")
+})

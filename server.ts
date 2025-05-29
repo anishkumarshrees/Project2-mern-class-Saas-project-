@@ -1,5 +1,6 @@
 import app from "./src/app";
 import { envconfig } from "./src/config/config";
+import "./src/database/connection"
 
 function startserver(){
     const port= envconfig.portNumber
