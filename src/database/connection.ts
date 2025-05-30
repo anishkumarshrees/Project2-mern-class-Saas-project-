@@ -1,4 +1,4 @@
-import { error } from "console"
+
 import { Sequelize } from "sequelize"
 
 const sequelize = new Sequelize({
@@ -12,7 +12,7 @@ const sequelize = new Sequelize({
 
 sequelize.authenticate()
 .then(()=>{
-    console.log("connected")
+    console.log("connect vayo")
 })
 .catch(()=>{
     console.log("error")
