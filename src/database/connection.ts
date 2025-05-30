@@ -1,5 +1,5 @@
 
-import { Sequelize } from "sequelize"
+import { Sequelize } from "sequelize-typescript"
 
 const sequelize = new Sequelize({
     database : process.env.DB_NAME, //database ko name
@@ -7,7 +7,8 @@ const sequelize = new Sequelize({
     password : process.env.DB_PASSWORD, // database ko pw, by default khali hunxa
     host : process.env.DB_LOCALHOST, // database ko location
     dialect : "mysql", // kun database use garna aateko vanne kura
-    port: Number(process.env.DB_PORT) //default port number 3306 hunxa
+    port: Number(process.env.DB_PORT), //default port number 3306 hunxa
+    models:[__dirname + '/models']  //current loactiaon +'./models'
 })
 
 sequelize.authenticate()
@@ -17,3 +18,11 @@ sequelize.authenticate()
 .catch(()=>{
     console.log("error")
 })
+
+sequelize.sync({force:false})
+.then(()=>{
+    console.log("migrated successfull vayo")
+})
+
+
+export default sequelize
