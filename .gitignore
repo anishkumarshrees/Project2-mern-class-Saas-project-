@@ -1,7 +1,0 @@
-// to hide gir rm --cached file name
-# Node.js
-
-.log
-*node_modules
-dist
-*.env
