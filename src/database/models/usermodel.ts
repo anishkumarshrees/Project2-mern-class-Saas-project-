@@ -24,11 +24,13 @@ class user extends Model{
         type: DataType.STRING
     })
     declare password:string
+
     @Column({
         type: DataType.STRING,
             
     })
     declare email:string
+    
     @Column({
         type:DataType.ENUM('super-admin','teacher','institute','student'),
         // defaultvalue:'student'
