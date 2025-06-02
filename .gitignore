@@ -1,0 +1,9 @@
+
+// to hide gir rm --cached file name
+// to hide node_modules  git rm -r --cached node_modules
+# Node.js
+
+.log
+*node_modules
+dist
+*.env
