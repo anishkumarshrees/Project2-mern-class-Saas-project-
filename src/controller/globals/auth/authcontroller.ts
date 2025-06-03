@@ -18,29 +18,31 @@ reset password/ otp
 
 import {Request, Response} from "express"
 import user from "../../../database/models/usermodel"
+import bcrypt from 'bcrypt'
+
 //functional style we use this style in past projects
-const registerUser = async (req:Request,res:Response)=>{
-    const {username , email, password} = req.body
-    if(!username || !password || !email){
-        res.status(400).json({
-            message : "please provide all data"
-        })
-    }
-    else{
-        // insert into user tables
-       await user.create({
-            username :username,
-            password:password,
-            email:email
-        })
-        res.status(200).json({
-            messgage:"user register successfully"
-        })
-    }
+// const registerUser = async (req:Request,res:Response)=>{
+//     const {username , email, password} = req.body
+//     if(!username || !password || !email){
+//         res.status(400).json({
+//             message : "please provide all data"
+//         })
+//     }
+//     else{
+//         // insert into user tables
+//        await user.create({
+//             username :username,
+//             password:password,
+//             email:email
+//         })
+//         res.status(200).json({
+//             messgage:"user register successfully"
+//         })
+//     }
 
-}
+// }
 
-export {registerUser}
+// export {registerUser}
 
 
 
@@ -52,12 +54,38 @@ export {registerUser}
 
 // }
 //oop style but this is good for good programing
-// class AuthController{
-//     static async registerUser(){
+class AuthController{
+    static registerUser(){
+        async (req:Request,res:Response)=>{
+            if(req.body===undefined){
+                res.status(400).json({
+                    message : "please provide all data"
+                })
+                return
+            }
+    const {username , email, password} = req.body
+    if(!username || !password || !email){
+        res.status(400).json({
+            message : "please provide all data"
+        })
+    }
+    else{
+        // insert into user tables
+       await user.create({
+            username :username,
+            password:bcrypt.hashSync(password,12),
+            email:email
+        })
+        res.status(200).json({
+            messgage:"user register successfully"
+        })
+    }
 
-//     }
+}
+
+    }
     
-// }
+}
 
 
-// module.exports = AuthController
+export default AuthController

@@ -19,7 +19,7 @@ sequelize.authenticate()
     console.log("error")
 })
 
-sequelize.sync({force:false})
+sequelize.sync({force:true})
 .then(()=>{
     console.log("migrated successfull vayo")
 })
