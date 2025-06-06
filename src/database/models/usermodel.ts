@@ -7,7 +7,7 @@ import {Table,Column,Model,DataType, PrimaryKey} from "sequelize-typescript"
     timestamps : true
 })
 
-class user extends Model{
+class User extends Model{
     @Column({
         primaryKey:true,
         type:DataType.UUID,
@@ -38,4 +38,4 @@ class user extends Model{
     declare role:string
 
 }
-export default user
+export default User
