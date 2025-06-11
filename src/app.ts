@@ -5,6 +5,6 @@ import authRoute from "./routes/globals/auth/authRouter"
 
 app.use(express.json())
 
-app.use("/api", authRoute)
+app.use("/", authRoute)
 
 export default app

@@ -55,9 +55,20 @@ import bcrypt from 'bcrypt'
 
 // }
 //oop style but this is good for good programing
+//flow for login
+//email/username, password(basic)
+//email, password -- data accept --> validation-->
+//first check email exist or not (verify) --> yes --> password check --> correct --> token generation(jsonwebtoken)
+
+
+
+//google login, fb, github(outh)
+//email login (SSO)
+
+
 class AuthController{
-    static registerUser(){
-        async (req:Request,res:Response)=>{
+    static async registerUser(req:Request,res:Response){
+         {
             if(req.body==undefined){
                 res.status(400).json({
                     message : "please provide all data"
@@ -89,16 +100,17 @@ class AuthController{
 
     }
  
-    async loginUser (req:Request,res:Response){
+  static  async loginUser (req:Request,res:Response){
             const {email,password}=req.body
             if(!email || !password){
                 res.status(400).json({
                     message:"please provide email and passowrd"
                 })
+            
+                return 
             }
-               return 
 
-     
+            //check if email exist or not in our data
       const data =  await User.findAll({
             where:{
                 email 
@@ -106,11 +118,20 @@ class AuthController{
         })
         if(data.length==0){
                 res.status(404).json({
-                    message:"please give data"
+                    message:"not register"
                 })
         }
         else{
-            bcrypt.compareSync(password)
+         const isPasswordMatch =   bcrypt.compareSync(password,data[0].password)
+         //password math vayo ki nai check   
+         if(isPasswordMatch){
+                //milyo vaney login vayo token generation le
+            }
+            else{
+                res.status(400).json({
+                    message:"password or email is not match"
+                })
+            }
         }
                 }
     
@@ -118,4 +139,4 @@ class AuthController{
 }
 
 
-export default AuthController
+export  default AuthController
