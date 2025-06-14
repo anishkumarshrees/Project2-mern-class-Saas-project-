@@ -17,6 +17,7 @@ reset password/ otp
 */
 
 import {Request, Response} from "express"
+import jwt  from "jsonwebtoken"
 
 import User from "../../../database/models/usermodel"
 import bcrypt from 'bcrypt'
@@ -123,9 +124,17 @@ class AuthController{
         }
         else{
          const isPasswordMatch =   bcrypt.compareSync(password,data[0].password)
-         //password math vayo ki nai check   
+         //password match vayo ki nai check   
          if(isPasswordMatch){
                 //milyo vaney login vayo token generation le
+              const token= jwt.sign({
+                id:data[0].id
+              },"thisissecret",{
+                expiresIn:"90d"
+              })
+                res.json({
+                    token:token
+                })
             }
             else{
                 res.status(400).json({
