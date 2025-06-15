@@ -127,13 +127,12 @@ class AuthController{
          //password match vayo ki nai check   
          if(isPasswordMatch){
                 //milyo vaney login vayo token generation le
-              const token= jwt.sign({
-                id:data[0].id
-              },"thisissecret",{
-                expiresIn:"90d"
+              const token= jwt.sign({id:data[0].id},"thisissecret",{
+                expiresIn:"30d"
               })
-                res.json({
-                    token:token
+                res.status(201).json({
+                    token:token,
+                    message:"login successfully"
                 })
             }
             else{
