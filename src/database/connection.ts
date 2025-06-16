@@ -21,7 +21,7 @@ sequelize.authenticate()
     console.log(error)
 })
 
-sequelize.sync({alter:false})
+sequelize.sync({alter:true})
 .then(()=>{
     console.log("migrated successfull vayo")
 })
