@@ -1,4 +1,4 @@
-import {Request,Response} from "express"
+import {NextFunction, Request,Response} from "express"
 import Jwt  from "jsonwebtoken"
 
 
@@ -12,7 +12,8 @@ import Jwt  from "jsonwebtoken"
 
 class Middleware{
     // hello(req:Extend,res:Response)
-  static  isLoggedIn(req:Request,res:Response){
+    //route maa next steps garna ko lagi next function halnu parxa
+  static  isLoggedIn(req:Request,res:Response,next:NextFunction){
     //steps 
     //check if login or not
     //token accept
@@ -27,8 +28,18 @@ class Middleware{
     return
   }
   //verify garni steps
-  Jwt.verify(token,)
-
+  Jwt.verify(token,'thisissecret',(erroraayo,resultaayo)=>{
+    if(erroraayo){
+        res.status(401).json({
+            message:"invalid token"
+        })
+    }else{
+        //token verify garni
+        console.log(resultaayo,'successfully logged in')
+        
+    }
+  })
+next()
     }
 }
 
