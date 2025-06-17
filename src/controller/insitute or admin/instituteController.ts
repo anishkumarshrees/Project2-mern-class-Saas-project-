@@ -40,15 +40,16 @@ class InstituteController {
         await sequelize.query(`CREATE TABLE IF NOT EXISTS user_institute(
           id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
           userId INT REFERENCES users(id),
-          instituteNumber VARCHAR(255) UNIQUE
+          instituteNumber VARCHAR(255) UNIQUE,
+          
           )`)
 
 
           if(req.user){
           req.instituteNumber=instituteUniqueNumber
-          // await sequelize.query(`INSERT INTO user_institute(userId,instituteNumber) VALUES(?,?)`,{
-          //   replacements : [req.user.id,instituteUniqueNumber]
-          // })
+          await sequelize.query(`INSERT INTO user_institute(userId,instituteNumber) VALUES(?,?)`,{
+            replacements : [req.user.id,instituteNumber]
+          })
           
         const result =  await User.update({
             currentInstituteNumber:instituteNumber,
