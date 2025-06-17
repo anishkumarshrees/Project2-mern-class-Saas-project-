@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, request, Request, response, Response } from "express";
 import sequelize from "../../database/connection";
 import instituteRandomNumber from "../../services/randomNumber";
 import { IExtendedRequest } from "../../middleware/type";
@@ -39,16 +39,17 @@ class InstituteController {
         
         await sequelize.query(`CREATE TABLE IF NOT EXISTS user_institute(
           id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-          userId INT REFERENCES users(id),
-          instituteNumber VARCHAR(255) UNIQUE,
+          userId VARCHAR(255) REFERENCES users(id),
+          instituteNumber INT UNIQUE
           
           )`)
+          
 
 
           if(req.user){
           req.instituteNumber=instituteUniqueNumber
           await sequelize.query(`INSERT INTO user_institute(userId,instituteNumber) VALUES(?,?)`,{
-            replacements : [req.user.id,instituteNumber]
+            replacements : [req.user.id,instituteUniqueNumber]
           })
           
         const result =  await User.update({
@@ -59,23 +60,67 @@ class InstituteController {
               id:req.user.id
             }
           })
+          next()
          
         }
+        req.instituteNumber=instituteNumber
        
-        next()
         
        }
-}
 
-const createTeacherTable=async(req:Request,res:Response)=>{
-  await  sequelize.query(`
-        CREATE TABLE IF NOT EXSITS teacher_${instituteRandomNumber}(
-        id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        teacherName VARCHAR(255) NOT NULL ,
-        teacherEmail VARCHAR(255) NOT NULL UNIQUE,
-        teacherNumber VARCHAR(255) NOT NULL UNIQUE,
-        ) 
+
+       //table for teacher
+    static async createTeacherTable(req: IExtendedRequest, res: Response,next:NextFunction) {
+         const instituteUniqueNumber = req.instituteNumber
+    
+
+      await sequelize.query(`
+        CREATE TABLE IF NOT EXISTS teacher_${instituteUniqueNumber} (
+          id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          teacherName VARCHAR(255) NOT NULL,
+          teacherEmail VARCHAR(255) NOT NULL UNIQUE,
+          teacherNumber VARCHAR(255) NOT NULL UNIQUE
+        )
+      `);
+
+      next()
+      res.status(201).json({ message: `Teacher table teacher_${instituteUniqueNumber} created successfully.` });
+    } 
+
+
+
+    //Student table
+    static async createStudentTable(req:IExtendedRequest,res:Response,next:NextFunction){
+      const instituteUniqueNumber = req.instituteNumber
+      await sequelize.query(`
+          CREATE TABLE IF NOT EXISTS student_${instituteUniqueNumber}(
+          id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          studentName VARCHAR(255) NOT NULL,
+          studentEmail VARCHAR(255) NOT NULL UNIQUE,
+          studentNumber VARCHAR(255) NOT NULL UNIQUE
+          )
         `)
-}
+        next()
+    }
+
+    //course table
+    static async createCourseTable(req:IExtendedRequest,res:Response,next:NextFunction){
+      const instituteUniqueNumber = req.instituteNumber
+      await sequelize.query(`
+          CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
+          id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          courseName VARCHAR(255) NOT NULL,
+          coursePrice VARCHAR(255) NOT NULL
+          )
+        `)
+        next()
+    }
+
+  }
+
+
+
+
+ 
 
 export default InstituteController
