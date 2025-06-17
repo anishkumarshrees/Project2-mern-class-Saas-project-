@@ -1,10 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import sequelize from "../../database/connection";
 import instituteRandomNumber from "../../services/randomNumber";
+import { IExtendedRequest } from "../../middleware/type";
+import User from "../../database/models/usermodel";
 
 
 class InstituteController {
-   static async createInstitute(req: Request, res: Response) {
+   static async createInstitute(req: IExtendedRequest, res: Response,next:NextFunction) {
         const { instituteName, instituteEmail, instituteNumber, instituteAddress } = req.body
        const instituteVatNo = req.body.instituteVatNo || null
        const institutePanNo = req.body.institutePanNo || null
@@ -16,7 +18,7 @@ class InstituteController {
        }
     //sabai details aayo vani - institute create garna paryo
 
-
+       //random number generate gareko services maa xa
     const instituteUniqueNumber = instituteRandomNumber()
 
   await  sequelize.query(
@@ -34,11 +36,33 @@ class InstituteController {
         await sequelize.query(`INSERT INTO institute_${instituteUniqueNumber}( instituteName, instituteEmail,instituteNumber,instituteAddress, instituteVatNo,institutePanNo )VALUES(?,?,?,?,?,?)`,{
             replacements : [instituteName,instituteEmail,instituteNumber,instituteAddress,institutePanNo,instituteVatNo]
         })
+        
+        await sequelize.query(`CREATE TABLE IF NOT EXISTS user_institute(
+          id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+          userId INT REFERENCES users(id),
+          instituteNumber VARCHAR(255) UNIQUE
+          )`)
 
-        res.status(200).json({
-            message:"institute created successfully"
-        })
 
+          if(req.user){
+          req.instituteNumber=instituteUniqueNumber
+          // await sequelize.query(`INSERT INTO user_institute(userId,instituteNumber) VALUES(?,?)`,{
+          //   replacements : [req.user.id,instituteUniqueNumber]
+          // })
+          
+        const result =  await User.update({
+            currentInstituteNumber:instituteNumber,
+            role:'institute'
+          },{
+            where:{
+              id:req.user.id
+            }
+          })
+         
+        }
+       
+        next()
+        
        }
 }
 

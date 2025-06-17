@@ -1,4 +1,4 @@
-import {Table,Column,Model,DataType, PrimaryKey} from "sequelize-typescript"
+import {Table,Column,Model,DataType, PrimaryKey, AllowNull} from "sequelize-typescript"
 
 
 @Table({
@@ -8,8 +8,9 @@ import {Table,Column,Model,DataType, PrimaryKey} from "sequelize-typescript"
 })
 
 class User extends Model{
+    @PrimaryKey
     @Column({
-        primaryKey:true,
+       
         type:DataType.UUID,
         defaultValue: DataType.UUIDV4
     })
@@ -27,15 +28,22 @@ class User extends Model{
 
     @Column({
         type: DataType.STRING,
+       
             
     })
     declare email:string
     
     @Column({
         type:DataType.ENUM('super-admin','teacher','institute','student'),
-        // defaultvalue:'student'
+        defaultValue:'student'
     })
     declare role:string
+
+    @Column({
+        type:DataType.STRING,
+      
+    })
+    declare currentInstituteNumber:String
 
 }
 export default User

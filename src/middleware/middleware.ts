@@ -16,7 +16,7 @@ import { IExtendedRequest } from "./type"
 class Middleware{
     // hello(req:Extend,res:Response)
     //route maa next steps garna ko lagi next function halnu parxa
-  static  isLoggedIn(req:IExtendedRequest,res:Response,next:NextFunction){
+  static async isLoggedIn(req:IExtendedRequest,res:Response,next:NextFunction){
     //steps 
     //check if login or not
     //token accept
@@ -47,12 +47,13 @@ class Middleware{
 
         }
         else{
-            req.user? : userData
+            req.user = userData
             next()
         }
 
     }
-  })
+})
+
 
     }
 }
