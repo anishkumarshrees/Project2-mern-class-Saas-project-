@@ -44,14 +44,14 @@ class InstituteController {
           
           )`)
           
-
+  req.instituteNumber=instituteNumber
 
           if(req.user){
           req.instituteNumber=instituteUniqueNumber
           await sequelize.query(`INSERT INTO user_institute(userId,instituteNumber) VALUES(?,?)`,{
             replacements : [req.user.id,instituteUniqueNumber]
           })
-          
+         
         const result =  await User.update({
             currentInstituteNumber:instituteNumber,
             role:'institute'
@@ -63,7 +63,7 @@ class InstituteController {
           next()
          
         }
-        req.instituteNumber=instituteNumber
+       
        
         
        }
@@ -73,7 +73,7 @@ class InstituteController {
     static async createTeacherTable(req: IExtendedRequest, res: Response,next:NextFunction) {
          const instituteUniqueNumber = req.instituteNumber
     
-
+       
       await sequelize.query(`
         CREATE TABLE IF NOT EXISTS teacher_${instituteUniqueNumber} (
           id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -81,17 +81,19 @@ class InstituteController {
           teacherEmail VARCHAR(255) NOT NULL UNIQUE,
           teacherNumber VARCHAR(255) NOT NULL UNIQUE
         )
-      `);
+      `)
 
       next()
-      res.status(201).json({ message: `Teacher table teacher_${instituteUniqueNumber} created successfully.` });
+    
     } 
+    
 
 
 
     //Student table
     static async createStudentTable(req:IExtendedRequest,res:Response,next:NextFunction){
-      const instituteUniqueNumber = req.instituteNumber
+     try{ const instituteUniqueNumber = req.instituteNumber
+    
       await sequelize.query(`
           CREATE TABLE IF NOT EXISTS student_${instituteUniqueNumber}(
           id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -101,21 +103,33 @@ class InstituteController {
           )
         `)
         next()
+      }
+      catch(error) {
+    console.error("Error creating student table:", error)
+    res.status(500).json({ message: "Failed to create student table." })
+  }
     }
+     
 
     //course table
     static async createCourseTable(req:IExtendedRequest,res:Response,next:NextFunction){
       const instituteUniqueNumber = req.instituteNumber
       await sequelize.query(`
-          CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
+        CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
           id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
           courseName VARCHAR(255) NOT NULL,
           coursePrice VARCHAR(255) NOT NULL
           )
-        `)
-        next()
+          `)
+          next()
+         
+        res.status(200).json({
+          message:"institue created successfully",
+          instituteUniqueNumber
+        })
     }
-
+    
+    
   }
 
 
