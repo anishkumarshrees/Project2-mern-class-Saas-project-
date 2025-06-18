@@ -12,7 +12,9 @@ import multer from "multer";
     },
     //filename for files coming from destination
     filename:function(req:Request,file:Express.Multer.File,cb:any){
-
+        cb(null,file.originalname+"_"+Date.now())
+        // cb(null,file.originalname+"_"+req.user.id) user ko id ko name rakhna paryo vani yo code
+        
     }
 })
 export default multer

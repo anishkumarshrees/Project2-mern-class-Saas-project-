@@ -3,7 +3,7 @@ import { Request } from "express";
 
 
 export interface IExtendedRequest extends Request{
-       user?: {
+       user ?: {
        id : string,
         email : string, 
        currentInstituteNumber : string

@@ -6,8 +6,8 @@ import instituteRandomNumber from "../../../services/randomNumber";
 class CourseController{
  
 static async createCourse(req:IExtendedRequest,res:Response,next:NextFunction){
-//    const instiuteNumber= req.instituteNumber
-    const instituteNumber=instituteRandomNumber()
+//    const instiuteUniqueNumber= instituteRandomNumber()
+    const instituteNumber=req.user?.currentInstituteNumber
     const{courseName,coursePrice,courseDuration,courseLevel}=req.body
     if(!courseName||!coursePrice||!courseDuration||!courseLevel){
         return res.status(400).json({
