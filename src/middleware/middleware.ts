@@ -39,7 +39,14 @@ class Middleware{
     }else{
         //token verify garni
         // console.log(resultaayo,'successfully logged in')
-        const userData=await User.findByPk(resultaayo.id)
+        // const userData=await User.findByPk(resultaayo.id,{
+        //     attributes:['id','currentInstituteNumber']
+        // })
+        const userData=await User.findByPk(resultaayo.id,{
+            attributes:['id','currentInstituteNumber']
+        })
+            
+        
         if(!userData){
             res.status(403).json({
                 message:"user not found"

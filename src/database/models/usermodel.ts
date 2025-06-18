@@ -22,6 +22,13 @@ class User extends Model{
     declare username : string
 
     @Column({
+        type:DataType.STRING,
+      
+    })
+    declare currentInstituteNumber:string
+
+    
+    @Column({
         type: DataType.STRING
     })
     declare password:string
@@ -39,11 +46,6 @@ class User extends Model{
     })
     declare role:string
 
-    @Column({
-        type:DataType.STRING,
-      
-    })
-    declare currentInstituteNumber:String
 
 }
 export default User

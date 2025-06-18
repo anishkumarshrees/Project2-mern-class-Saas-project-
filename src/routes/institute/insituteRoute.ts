@@ -5,7 +5,7 @@ import Middleware from "../../middleware/middleware"
 import asyncErrorHandler from "../../services/errorHandeling"
 const router:Router =express.Router()
 
-router.route("/").post(Middleware.isLoggedIn,asyncErrorHandler( InstituteController.createInstitute),asyncErrorHandler(InstituteController.createTeacherTable),asyncErrorHandler(InstituteController.createStudentTable),asyncErrorHandler(InstituteController.createCourseTable))
+router.route("/").post(asyncErrorHandler(Middleware.isLoggedIn),asyncErrorHandler( InstituteController.createInstitute),asyncErrorHandler(InstituteController.createTeacherTable),asyncErrorHandler(InstituteController.createStudentTable),asyncErrorHandler(InstituteController.createCourseTable))
 
 
 export default router
