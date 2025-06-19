@@ -19,6 +19,7 @@ class InstituteController {
     //sabai details aayo vani - institute create garna paryo
 
        //random number generate gareko services maa xa
+      //  const currentInstituteNumber=instituteRandomNumber()
     const instituteUniqueNumber = instituteRandomNumber()
 
   await  sequelize.query(
@@ -43,21 +44,21 @@ class InstituteController {
           instituteNumber INT UNIQUE
           
           )`)
-          
-  req.instituteNumber=instituteNumber
+        
 
           if(req.user){
-          req.instituteNumber=instituteUniqueNumber
+          req.user.currentInstituteNumber=instituteUniqueNumber
           await sequelize.query(`INSERT INTO user_institute(userId,instituteNumber) VALUES(?,?)`,{
             replacements : [req.user.id,instituteUniqueNumber]
           })
          
         const result =  await User.update({
-            currentInstituteNumber:instituteNumber,
+         
+            currentInstituteNumber:instituteUniqueNumber,
             role:'institute'
           },{
             where:{
-              id:req.user.id
+              id:req.user.id  
             }
           })
           next()
@@ -71,7 +72,7 @@ class InstituteController {
 
        //table for teacher
     static async createTeacherTable(req: IExtendedRequest, res: Response,next:NextFunction) {
-         const instituteUniqueNumber = req.instituteNumber
+         const instituteUniqueNumber = req.user?.currentInstituteNumber
     
        
       await sequelize.query(`
@@ -99,7 +100,7 @@ class InstituteController {
 
     //Student table
     static async createStudentTable(req:IExtendedRequest,res:Response,next:NextFunction){
-     const instituteUniqueNumber = req.instituteNumber
+     const instituteUniqueNumber = req.user?.currentInstituteNumber
     
       await sequelize.query(`
           CREATE TABLE IF NOT EXISTS student_${instituteUniqueNumber}(
@@ -121,13 +122,13 @@ class InstituteController {
 
     //course table
     static async createCourseTable(req:IExtendedRequest,res:Response,next:NextFunction){
-      const instituteUniqueNumber = req.instituteNumber
+      const instituteUniqueNumber = req.user?.currentInstituteNumber
       await sequelize.query(`
         CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
           id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
           courseName VARCHAR(255) NOT NULL,
           coursePrice VARCHAR(255) NOT NULL,
-          courseDuration VARCHAR(255),
+          courseDuration VARCHAR(255) NOT NULL,
           courseLevel ENUM('Begginer','Intermediate','Advance'),
           createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

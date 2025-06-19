@@ -48,13 +48,13 @@ class Middleware{
             
         
         if(!userData){
-            res.status(403).json({
+         return  res.status(403).json({
                 message:"user not found"
             })
 
         }
         else{
-            req.user = userData
+            req.user = userData.toJSON()
             next()
         }
 

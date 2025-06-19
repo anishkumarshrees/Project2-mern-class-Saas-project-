@@ -3,7 +3,7 @@
 import { Request } from "express";
 import multer from "multer";
 
-  multer.diskStorage({
+ const storage= multer.diskStorage({
     //location for incoming files
     //cb=call back
     destination:function(req:Request,file:Express.Multer.File,cb:any){
@@ -17,4 +17,4 @@ import multer from "multer";
         
     }
 })
-export default multer
+export {multer,storage}

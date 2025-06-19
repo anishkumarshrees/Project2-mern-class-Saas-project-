@@ -3,12 +3,16 @@ import sequelize from "../../../database/connection";
 import { IExtendedRequest } from "../../../middleware/type";
 import instituteRandomNumber from "../../../services/randomNumber";
 
+
 class CourseController{
  
 static async createCourse(req:IExtendedRequest,res:Response,next:NextFunction){
-//    const instiuteUniqueNumber= instituteRandomNumber()
-    const instituteNumber=req.user?.currentInstituteNumber
+   const instituteUniqueNumber= req.user?.currentInstituteNumber
+    // const =req.user?.currentInstituteNumber
     const{courseName,coursePrice,courseDuration,courseLevel}=req.body
+      if (!instituteUniqueNumber) {
+    return res.status(403).json({ message: "No institute assigned to user." });
+  }
     if(!courseName||!coursePrice||!courseDuration||!courseLevel){
         return res.status(400).json({
             message:"Please fill all the fields"
@@ -16,8 +20,8 @@ static async createCourse(req:IExtendedRequest,res:Response,next:NextFunction){
     }
 
 
-    const returnedData=await sequelize.query(`INSERT INTO course_${instituteNumber}(coursePrice,courseName,courseDuration,courseLevel)VALUES(?,?,?,?)`,{
-        replacements:[courseName,courseDuration,coursePrice,courseLevel]
+    const returnedData=await sequelize.query(`INSERT INTO course_${instituteUniqueNumber}(courseName,coursePrice,courseDuration,courseLevel)VALUES(?,?,?,?)`,{
+        replacements:[courseName,coursePrice,courseDuration,courseLevel]
     })
     
    console.log(returnedData)
@@ -29,7 +33,7 @@ static async createCourse(req:IExtendedRequest,res:Response,next:NextFunction){
 }
 static async deleteCourse(req:IExtendedRequest,res:Response,next:NextFunction){
     // const instituteNumber=req.instituteNumber
-    const instituteNumber=instituteRandomNumber()
+    const instituteNumber=req.user?.currentInstituteNumber
     const courseId=req.params.id
 
     const [courseData]=await sequelize.query(`SELECT * FROM couse_${instituteNumber} WHERE id=? `,{
