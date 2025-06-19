@@ -24,7 +24,7 @@ static async createCourse(req:IExtendedRequest,res:Response,next:NextFunction){
         replacements:[courseName,coursePrice,courseDuration,courseLevel]
     })
     
-   console.log(returnedData)
+   console.log("course created ",returnedData)
    res.status(200).json({
     message:"Course created successfully"
    })

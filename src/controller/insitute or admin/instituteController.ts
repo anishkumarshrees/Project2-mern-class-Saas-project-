@@ -47,12 +47,12 @@ class InstituteController {
         
 
           if(req.user){
-          req.user.currentInstituteNumber=instituteUniqueNumber
+          // req.user.currentInstituteNumber=instituteUniqueNumber
           await sequelize.query(`INSERT INTO user_institute(userId,instituteNumber) VALUES(?,?)`,{
             replacements : [req.user.id,instituteUniqueNumber]
           })
          
-        const result =  await User.update({
+          await User.update({
          
             currentInstituteNumber:instituteUniqueNumber,
             role:'institute'
