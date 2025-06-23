@@ -16,7 +16,8 @@ static async createCourse(req:IExtendedRequest,res:Response,next:NextFunction){
             message:"Please fill all the fields"
         })
     }
-
+        //this is to save file name in db while store in storage
+    // const courseThumbnail=req.file ? req.file.filename:null
     const courseThumbnail=req.file ? req.file.path:null
 
     const returnedData=await sequelize.query(`INSERT INTO course_${instituteNumber}(courseName,coursePrice,courseDuration,courseLevel,courseThumbnail)VALUES(?,?,?,?,?)`,{

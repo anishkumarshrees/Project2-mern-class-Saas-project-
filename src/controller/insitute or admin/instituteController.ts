@@ -132,11 +132,11 @@ class InstituteController {
 
       await sequelize.query(`
         CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
-          id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-          courseName VARCHAR(255) NOT NULL,
+          id VARCHAR(255) INT NOT NULL PRIMARY KEY AUTO_INCREMENT(UUID()),
+          courseName VARCHAR(255) NOT NULL UNIQUE,
           coursePrice VARCHAR(255) NOT NULL,
           courseDuration VARCHAR(255) NOT NULL,
-          courseLevel ENUM('Beginner','Intermediate','Advance'),
+          courseLevel ENUM('Beginner','Intermediate','Advance') NOT NULL,
           courseThumbnail VARCHAR(200),
           createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
