@@ -6,6 +6,6 @@ import { multer,storage } from './../../middleware/multerMiddleware'
 const upload= multer({storage:storage})
 const router:Router =express.Router()
 
-router.route("/").post(Middleware.isLoggedIn, asyncErrorHandler(CourseController.createCourse))
-router.route("/").get(Middleware.isLoggedIn,asyncErrorHandler(CourseController.getAllCourse))
+router.route("/").post(Middleware.isLoggedIn, upload.single('courseThumbnail'),asyncErrorHandler(CourseController.createCourse))
+router.route("/id").get(Middleware.isLoggedIn,asyncErrorHandler(CourseController.getAllCourse))
 export default router

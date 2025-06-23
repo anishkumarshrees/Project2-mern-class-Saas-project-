@@ -7,21 +7,21 @@ import instituteRandomNumber from "../../../services/randomNumber";
 class CourseController{
  
 static async createCourse(req:IExtendedRequest,res:Response,next:NextFunction){
-   const instituteUniqueNumber= req.user?.currentInstituteNumber
+   const instituteNumber= req.user?.currentInstituteNumber
     // const =req.user?.currentInstituteNumber
     const{courseName,coursePrice,courseDuration,courseLevel}=req.body
-      if (!instituteUniqueNumber) {
-    return res.status(403).json({ message: "No institute assigned to user." });
-  }
-    if(!courseName||!coursePrice||!courseDuration||!courseLevel){
+     
+    if(!courseName || !coursePrice || !courseDuration || !courseLevel){
         return res.status(400).json({
             message:"Please fill all the fields"
         })
     }
 
+    const courseThumbnail=req.file ? req.file.path:null
 
-    const returnedData=await sequelize.query(`INSERT INTO course_${instituteUniqueNumber}(courseName,coursePrice,courseDuration,courseLevel)VALUES(?,?,?,?)`,{
-        replacements:[courseName,coursePrice,courseDuration,courseLevel]
+    const returnedData=await sequelize.query(`INSERT INTO course_${instituteNumber}(courseName,coursePrice,courseDuration,courseLevel,courseThumbnail)VALUES(?,?,?,?,?)`,{
+    
+        replacements:[courseName,coursePrice,courseDuration,courseLevel,courseThumbnail]
     })
     
    console.log("course created ",returnedData)

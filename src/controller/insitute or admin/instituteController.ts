@@ -61,6 +61,8 @@ class InstituteController {
               id:req.user.id  
             }
           })
+          req.user.currentInstituteNumber=instituteUniqueNumber
+        
           next()
          
         }
@@ -73,6 +75,7 @@ class InstituteController {
        //table for teacher
     static async createTeacherTable(req: IExtendedRequest, res: Response,next:NextFunction) {
          const instituteUniqueNumber = req.user?.currentInstituteNumber
+         if(!instituteUniqueNumber) return 
     
        
       await sequelize.query(`
@@ -101,6 +104,7 @@ class InstituteController {
     //Student table
     static async createStudentTable(req:IExtendedRequest,res:Response,next:NextFunction){
      const instituteUniqueNumber = req.user?.currentInstituteNumber
+     if(!instituteUniqueNumber) return 
     
       await sequelize.query(`
           CREATE TABLE IF NOT EXISTS student_${instituteUniqueNumber}(
@@ -122,28 +126,32 @@ class InstituteController {
 
     //course table
     static async createCourseTable(req:IExtendedRequest,res:Response,next:NextFunction){
+      
       const instituteUniqueNumber = req.user?.currentInstituteNumber
+      if(!instituteUniqueNumber) return next()
+
       await sequelize.query(`
         CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
           id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
           courseName VARCHAR(255) NOT NULL,
           coursePrice VARCHAR(255) NOT NULL,
           courseDuration VARCHAR(255) NOT NULL,
-          courseLevel ENUM('Begginer','Intermediate','Advance'),
+          courseLevel ENUM('Beginner','Intermediate','Advance'),
+          courseThumbnail VARCHAR(200),
           createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
           )
           `)
-          next()
+          
          
-        res.status(200).json({
-          message:"institue created successfully",
-          instituteUniqueNumber
+          res.status(200).json({
+            message:"institue created successfully",
+            instituteUniqueNumber
         })
+      }
+      
+      
     }
-    
-    
-  }
 
 
 
