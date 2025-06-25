@@ -1,4 +1,4 @@
-import express,{Router} from "express"
+import express,{Request, Router} from "express"
 import CourseController from "../../controller/insitute or admin/course/courseController"
 import Middleware from "../../middleware/middleware"
 import asyncErrorHandler from "../../services/errorHandeling"
@@ -13,9 +13,18 @@ import asyncErrorHandler from "../../services/errorHandeling"
 import {cloudinary,storage} from './../../services/cloudinaryConfig'
 import multer from "multer"
 
-const upload=multer({storage:storage})
+const upload=multer({storage:storage,
+    fileFilter:(req:Request,file:Express.Multer.File,cb)=>{
+        const allowedFileTypes=['image/png','image/jpg','image/jpeg']
+       if(allowedFileTypes.includes(file.mimetype)){
+        cb(null,true)
+    }else{
+        cb(new Error("only image support"))
+    }
+}
+})
 const router:Router =express.Router()
 
-router.route("/").post(Middleware.isLoggedIn, upload.single('courseThumbnail'),asyncErrorHandler(CourseController.createCourse))
-router.route("/id").get(Middleware.isLoggedIn,asyncErrorHandler(CourseController.getAllCourse))
+router.route("/").post(Middleware.isLoggedIn, upload.single('courseThumbnail'),asyncErrorHandler(CourseController.createCourse)).post(Middleware.isLoggedIn,asyncErrorHandler(CourseController.getAllCourse))
+
 export default router

@@ -51,7 +51,7 @@ return res.status(400).json({
 }
 static async getAllCourse(req:IExtendedRequest,res:Response,next:NextFunction){
     const instituteNumber=instituteRandomNumber()
-    const course=await sequelize.query(`SELECT *FROM course_${instituteNumber}`)
+    const course=await sequelize.query(`SELECT * FROM course_${instituteNumber}`)
 
     res.status(200).json({
         message:"course fetched",
