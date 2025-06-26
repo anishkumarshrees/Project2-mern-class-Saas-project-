@@ -122,25 +122,30 @@ class InstituteController {
         
      
     }
-    static async createCategory(req:IExtendedRequest,res:Response,next:NextFunction){
-      const instituteUniqueNumber =req.user?.currentInstituteNumber
+
+    
+    static async createCategoryTable(req:IExtendedRequest,res:Response,next:NextFunction){
+      const instituteUniqueNumber=req.user?.currentInstituteNumber
       if (!instituteUniqueNumber) return
       await sequelize.query(`
         CREATE TABLE IF NOT EXISTS category_${instituteUniqueNumber}(
-        id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-        categoryName VARCHAR(100) NOT NULL,
-        categoryDescription TEXT,
-        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )
-        `)
-      //   categories.forEach(async function(category)){
-      //     await sequelize.query(`INSERT INTO category_${instituteUniqueNumber}(
-      //       categoryName,categoryDescription)values(?,?)
-      //        `{
-      //         replacements:[category]
-      //        })
-      //  }
+          id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+          categoryName VARCHAR(100) NOT NULL,
+          categoryDescription TEXT,
+          createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+          )
+          `)
+          //   categories.forEach(async function(category)){
+            //     await sequelize.query(`INSERT INTO category_${instituteUniqueNumber}(
+              //       categoryName,categoryDescription)values(?,?)
+              //        `{
+                //         replacements:[category]
+                //        })
+                //  }
+              
+                // req.user?.currentInstituteNumber=instituteUniqueNumber
+                next()
      
       }
      
