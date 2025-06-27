@@ -3,6 +3,7 @@ import sequelize from "../../database/connection";
 import instituteRandomNumber from "../../services/randomNumber";
 import { IExtendedRequest } from "../../middleware/type";
 import User from "../../database/models/usermodel";
+import categories from "../../seed";
 
 
 class InstituteController {
@@ -123,41 +124,17 @@ class InstituteController {
      
     }
 
+    //categiry table
     
-    static async createCategoryTable(req:IExtendedRequest,res:Response,next:NextFunction){
-      const instituteUniqueNumber=req.user?.currentInstituteNumber
-      if (!instituteUniqueNumber) return
-      await sequelize.query(`
-        CREATE TABLE IF NOT EXISTS category_${instituteUniqueNumber}(
-          id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-          categoryName VARCHAR(100) NOT NULL,
-          categoryDescription TEXT,
-          createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-          )
-          `)
-          //   categories.forEach(async function(category)){
-            //     await sequelize.query(`INSERT INTO category_${instituteUniqueNumber}(
-              //       categoryName,categoryDescription)values(?,?)
-              //        `{
-                //         replacements:[category]
-                //        })
-                //  }
-              
-                // req.user?.currentInstituteNumber=instituteUniqueNumber
-                next()
-     
-      }
-     
-
+    
     //course table
     static async createCourseTable(req:IExtendedRequest,res:Response,next:NextFunction){
       
       const instituteUniqueNumber = req.user?.currentInstituteNumber
       if(!instituteUniqueNumber) return next()
-
-      await sequelize.query(`
-        CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
+        
+        await sequelize.query(`
+          CREATE TABLE IF NOT EXISTS course_${instituteUniqueNumber}(
           id  INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
           courseName VARCHAR(255) NOT NULL UNIQUE,
           coursePrice VARCHAR(255) NOT NULL,
@@ -169,13 +146,37 @@ class InstituteController {
           )
           `)
           
-         
+          
           res.status(200).json({
             message:"institue created successfully",
             instituteUniqueNumber
-        })
-      }
-      
+          })
+        }
+        
+        static async createCategoryTable(req:IExtendedRequest,res:Response,next:NextFunction){
+          const instituteUniqueNumber=req.user?.currentInstituteNumber
+         if (!instituteUniqueNumber) return next()
+          await sequelize.query(`
+            CREATE TABLE IF NOT EXISTS category_${instituteUniqueNumber}(
+              id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+              categoryName VARCHAR(100) NOT NULL,
+              categoryDescription TEXT,
+              createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+              )
+              `)
+
+              //this is for seeding
+               categories.forEach(async function(category){
+                await sequelize.query(`INSERT INTO category_${instituteUniqueNumber}(categoryName,categoryDescription) VALUES(?,?)`,{
+                  replacements:[category.categoryName,category.categoryDescription]
+                })
+               })
+                  
+                    // req.user?.currentInstituteNumber=instituteUniqueNumber
+                    next()
+         
+          }
       
     }
 
